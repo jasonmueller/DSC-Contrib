@@ -20,15 +20,16 @@
     }
 
     $Template = @"
-[version("$Version"), FriendlyName("$ModuleName")]
-class $Name : MSFT_BaseResourceConfiguration
+[version("$Version"), FriendlyName("$Name")]
+class $ModuleName : MSFT_BaseResourceConfiguration
 {
 
 "@
     $CommonParameters = 'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 
                         'WarningVariable', 'ErrorVariable', 'OutVariable', 
-                        'OutBuffer', 'PipelineVariable'
-    $Command = get-command -Name Set-TargetResource -Module $ModuleName
+                        'OutBuffer', 'PipelineVariable', 'Confirm', 'Whatif'
+
+    $Command = get-command -Name Set-TargetResource -Module $ModuleName | select -First 1
 
     foreach ($key in $Command.Parameters.Keys)
     {
