@@ -45,7 +45,8 @@ class $ModuleName : MSFT_BaseResourceConfiguration
             $ValidateSetAttribute = $CurrentParameter.Attributes | 
                 Where-Object {$_ -is [System.Management.Automation.ValidateSetAttribute]}
 
-            if ($ParameterAttribute.Mandatory)
+            if ($ParameterAttribute.Mandatory -and
+                (-not $CurrentParameter.ParameterType.IsArray) )
             {
                 $PropertyString += '[Key'
                 $IsKey = $true
