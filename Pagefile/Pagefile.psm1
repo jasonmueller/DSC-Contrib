@@ -13,7 +13,7 @@ MaximumSizeDifferent=Configured Maximum Size {0} different than Desired size {1}
 '@
 }
 
-#Import-LocalizedData LocalizedData -filename PagefileProvider.psd1
+Import-LocalizedData LocalizedData -filename PagefileProvider.psd1
 
 function Get-TargetResource
 {
