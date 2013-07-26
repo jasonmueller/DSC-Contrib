@@ -10,6 +10,7 @@ DATA localizedData
     AppliedExecutionPolicy=Applied {0} as the execution policy.
     AnErrorOccurred=An error occurred trying to apply {0} as the execution policy: {1}.
     InnerException=Nested error trying to apply {0} as the execution policy: {1}.
+    DoesNotApply=Absent does not apply to this configuration item.
 '@
 }
 
@@ -56,21 +57,28 @@ function Set-TargetResource
         $Ensure = 'Present'
     )
 
-    Write-Verbose ($LocalizedData.ApplyingExecutionPolicy -f $Name)
-    try
+    if ($Ensure -like 'Present')
     {
-        Set-ExecutionPolicy -ExecutionPolicy $Name -Force -ErrorAction Stop
-        Write-Verbose ($LocalizedData.AppliedExecutionPolicy -f $Name)
-    }
-    catch 
-    {    
-        $exception = $_    
-        Write-Verbose ($LocalizedData.AnErrorOccurred -f $name, $exception.message)
-        while ($exception.InnerException -ne $null)
+        Write-Verbose ($LocalizedData.ApplyingExecutionPolicy -f $Name)
+        try
         {
-            $exception = $exception.InnerException
-            Write-Verbose ($LocalizedData.InnerException -f $name, $exception.message)
+            Set-ExecutionPolicy -ExecutionPolicy $Name -Force -ErrorAction Stop
+            Write-Verbose ($LocalizedData.AppliedExecutionPolicy -f $Name)
         }
+        catch 
+        {    
+            $exception = $_    
+            Write-Verbose ($LocalizedData.AnErrorOccurred -f $name, $exception.message)
+            while ($exception.InnerException -ne $null)
+            {
+                $exception = $exception.InnerException
+                Write-Verbose ($LocalizedData.InnerException -f $name, $exception.message)
+            }
+        }
+    }
+    else
+    {
+        Write-Verbose $LocalizedData.DoesNotApply
     }
 
     
